@@ -14,6 +14,7 @@
 /* local headers */
 #include <opts.h>
 #include <usage.h>
+#include <common/returncodes.h>
 
 /* Process the command line
  *
@@ -43,25 +44,25 @@ char *procopts(int argc, char *argv[]){
     switch (c) {
     case 'V':
       printf("%s: %s\n", opt_progname, PACKAGE_STRING);
-      exit(0);
+      exit(RTRN_OK);
       break;
 
     case 'h':
       usage();
-      exit(0);
+      exit(RTRN_OK);
       break;
 
     default:
       fprintf(stderr,"%s: Unknown option %c, use -h for help.\n", opt_progname, c);
     case '?':
-      exit(1);
+      exit(RTRN_ERR_CMDLINE);
       break;
     }
   }
 
   if (optind >= argc) {
     fprintf(stderr, "%s: You must specify at least one pathname, use -h for help.\n", opt_progname);
-    exit(1);
+    exit(RTRN_ERR_CMDLINE);
   }
   return &(argv[optind++]);
 }

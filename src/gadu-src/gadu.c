@@ -7,6 +7,7 @@
 
 /* local headers */
 #include <opts.h>
+#include <common/returncodes.h>
 #include <common/stub.h>
 
 int main(int argc, char *argv[]){
@@ -18,5 +19,5 @@ int main(int argc, char *argv[]){
   stub();
   printf("Done.\n");
 
-  return 0;
+  return RTRN_OK;
 }
