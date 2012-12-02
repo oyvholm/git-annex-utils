@@ -19,9 +19,9 @@
 /* Process the command line
  *
  * Does not return on error, version, or help.
- * returns - pointer to first non-option argument
+ * returns - index of first non-option argument in argv[]
  */
-char *procopts(int argc, char *argv[]){
+int procopts(int argc, char *argv[]){
   int c;
   int digit_optind = 0;
 
@@ -64,7 +64,7 @@ char *procopts(int argc, char *argv[]){
     fprintf(stderr, "%s: You must specify at least one pathname, use -h for help.\n", opt_progname);
     exit(RTRN_ERR_CMDLINE);
   }
-  return &(argv[optind++]);
+  return optind;
 }
 
 /* global program options, generally set by the command line */

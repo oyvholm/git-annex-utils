@@ -4,7 +4,7 @@
 #define __OPTS_H__
 
 /* process the command line */
-char *procopts(int argc, char *argv[]);
+int procopts(int argc, char *argv[]);
 
 /* command line options */
 #define SHORT_OPTS "Vh"

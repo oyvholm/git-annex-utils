@@ -11,9 +11,9 @@
 #include <common/stub.h>
 
 int main(int argc, char *argv[]){
-  char **paths;
+  int idx_paths; /* index to the first path in argv[] */
 
-  paths=procopts(argc, argv);
+  idx_paths=procopts(argc, argv);
 
   printf("Calling stub...\n");
   stub();
