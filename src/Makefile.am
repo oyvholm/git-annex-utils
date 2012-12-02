@@ -2,9 +2,9 @@ bin_PROGRAMS = gadu
 
 noinst_LTLIBRARIES = libgautils.la
 
-libgautils_la_SOURCES = common/stub.c common/stub.h
+libgautils_la_SOURCES = common/findgittop.c common/findgittop.h
 
 gadu_SOURCES = gadu-src/gadu.c gadu-src/opts.c gadu-src/opts.h gadu-src/usage.c \
-               gadu-src/usage.h common/returncodes.h
+               gadu-src/usage.h common/returncodes.h common/findgittop.h
 gadu_LDADD = libgautils.la
 gadu_CFLAGS = -I$(srcdir)/gadu-src

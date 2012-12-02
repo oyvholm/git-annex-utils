@@ -24,10 +24,16 @@ AC_PROG_LIBTOOL
 
 # Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADERS_ONCE([getopt.h])
+AC_CHECK_HEADERS_ONCE([getopt.h limits.h])
 #AC_CHECK_HEADERS([])
 
 # Checks for typedefs, structures, and compiler characteristics.
+AC_CHECK_DECLS([PATH_MAX], [],
+               [AC_MSG_ERROR([Couln't find PATH_MAX.  This should be defined in limits.h!])],
+               [#ifdef HAVE_LIMITS_H
+                # include <limits.h>
+                #endif
+               ])
 
 # Checks for library functions.
 AC_CHECK_FUNCS_ONCE([getopt_long])
