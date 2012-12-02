@@ -13,7 +13,6 @@
 /* local headers */
 #include <opts.h>
 #include <common/returncodes.h>
-#include <common/findgittop.h>
 
 int main(int argc, char *argv[]){
   int idx_paths; /* index to the first path in argv[] */
@@ -21,14 +20,9 @@ int main(int argc, char *argv[]){
   idx_paths=procopts(argc, argv);
 
   while(idx_paths<argc){
-    char top[PATH_MAX+1];
-    if(!findgittop(argv[idx_paths],top,PATH_MAX+1)){
-      size_t size;
-      printf("%s git dir: %s/.git\n",argv[idx_paths],top);
-      dothedu(argv[idx_paths],top,&size);
-    }
-    else
-      fprintf(stderr,"%s is not inside a git tree!\n",argv[idx_paths]);
+    size_t size;
+    dothedu(argv[idx_paths],&size);
+    printf("%d %s\n",size,argv[idx_paths]);
     idx_paths++;
   }
 

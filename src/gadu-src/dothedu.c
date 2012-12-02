@@ -18,10 +18,15 @@
 #ifdef HAVE_UNISTD_H
 # include <unistd.h>
 #endif /* HAVE_UNISTD_H */
+#ifdef HAVE_REGEX_H
+# include <regex.h>
+#endif /* HAVE_REGEX_H */
+#include <stdio.h>
 #include <stdlib.h>
 
 /* local headers */
-#include <common/findgittop.h>
+#include <opts.h>
+#include <common/returncodes.h>
 
 /* Walk through the directories and tally up all annexed file sizes
  *
@@ -35,89 +40,73 @@
  * returns:
  *  0 - success
  *  1 - couldn't stat something
- *  2 - top was not the beginning of path
- *  3 - realpath failed for some reason
+ *  2 - 
+ *  3 - 
  *  4 - couldn't open a dir in the path
  */
-int dothedu(const char *path, const char *top, size_t *size){
-  char abspath[PATH_MAX+1];
-  size_t top_s;
-  unsigned int depth=0;
-
-  /* resolve all the junk in the path and copy to abspath */
-  if(!realpath(path,abspath))
-    return 3;
-
-  top_s=strlen(top);
-
-  /* check that top is the beginning of path */
-  if(strncmp(abspath,top,top_s))
-    return 2;
-
-  { /* measure the current depth */
-    char *i;
-    i=&abspath[top_s];
-    while(*i)
-      if((*(i++))=='/') depth++;
-  }
-
-  return dothepath(abspath,top,size,depth);
+int dothedu(const char *path, size_t *size){
+  return dothepath(path,size);
 }
 
-int dothepath(const char *abspath, const char *top, size_t *size, unsigned int depth){
+int dothepath(const char *path, size_t *size){
   struct stat st;
+  regex_t regex;
+  regmatch_t regmatch;
+  char *p;
 
-  if(stat(abspath,&st))
-    return 1;
+  if(lstat(path,&st))
+    return 1; /* couldn't stat a path */
 
   if(S_ISDIR(st.st_mode))
-    return dothedir(abspath,top,size,depth+1);
+    return dothedir(path,size);
 
-  *size=0;
+  *size=0; /* we're handling it, start with a zero size */
+
   if(S_ISLNK(st.st_mode)){
     char linkbuf[PATH_MAX+1];
     ssize_t rslt;
 
     /* read the link */
-    rslt=readlink(abspath,linkbuf,PATH_MAX);
+    rslt=readlink(path,linkbuf,PATH_MAX);
     if(rslt>=0)
       linkbuf[rslt]=0;
     else
       linkbuf[0]=0; /* zero len string on err */
 
-    /* if the link is longer than "../"(3)*depth + ".git/annex/objects/"(19)
-     * then it might be an annexed file */
-    if(rslt>((depth*3)+19)){
-      size_t i=0;
-      size_t size_pos=0;
-      while(i<depth){
-	if(strncmp("../",linkbuf+(3*i),3))
-	  break; /* break if not same */
-	i++;
-      }
-      if(i!=depth)
-	return 0; /* didn't find the right number of "../", bail */
-      if(strncmp(".git/annex/objects/",linkbuf+(3*depth),19))
-	return 0; /* didn't find the reference the the annex objects dir */
-      /* we made it this far, look for the last instance of [-]s[0-9]+[-]
-       * and that will be our size */
-      for(i=(depth*3)+19;i<rslt-2;i++){
-	if(linkbuf[i]=='-' && linkbuf[i+1]=='s' && linkbuf[i+2]>='0' && linkbuf[i+2]<='9')
-	  size_pos=i+2;
-      }
-      if(size_pos!=0){
-	i=size_pos;
-	while(linkbuf[i]>='0' && linkbuf[i]<='9') i++;
-	linkbuf[i]=0;
-	*size=(size_t)atoll(&linkbuf[size_pos]);
-      }
+    if(regcomp(&regex,"^([.][.]/)*.git/annex/objects/",REG_EXTENDED)){
+      fprintf(stderr,"%s: An error occured compiling the regex, this shouldn't be possible!\n",opt_progname);
+      exit(RTRN_ERR_INTERNAL);
     }
 
+    rslt=regexec(&regex,linkbuf,1,&regmatch,0);
+
+    regfree(&regex);
+
+    if(rslt)
+      return 0; /* regex didn't match, not an annexed link.  Not an error */
+    
+    /* find the last '/' character */
+    p=linkbuf+strlen(linkbuf);
+    while( (p>linkbuf) && (*p)!='/' ) p--;
+
+    if(regcomp(&regex,"[-]s([0-9]+)[-]",REG_EXTENDED)){
+      fprintf(stderr,"%s: An error occured compiling the regex, this shouldn't be possible!\n",opt_progname);
+      exit(RTRN_ERR_INTERNAL);
+    }
+
+    rslt=regexec(&regex,p,1,&regmatch,0);
+
+    regfree(&regex);
+
+    if(rslt || regmatch.rm_so<0)
+      return 0; /* regex didn't match, not an annexed link?  Not an error? */
+
+    *size=strtoll(p+regmatch.rm_so+2,p+regmatch.rm_eo-1,10);
   }
 
   return 0;
 }
 
-int dothedir(const char *abspath,const char *top,size_t *size,unsigned int depth){
+int dothedir(const char *path,size_t *size){
   return 0;
 }

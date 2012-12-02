@@ -24,7 +24,7 @@ AC_PROG_LIBTOOL
 
 # Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADERS_ONCE([getopt.h limits.h])
+AC_CHECK_HEADERS_ONCE([getopt.h limits.h regex.h])
 #AC_CHECK_HEADERS([])
 
 # Checks for typedefs, structures, and compiler characteristics.
@@ -37,7 +37,8 @@ AC_CHECK_DECLS([PATH_MAX], [],
 
 # Checks for library functions.
 AC_CHECK_FUNCS_ONCE([getopt_long])
-AC_CHECK_FUNC([realpath],[],[AC_MSG_ERROR([Couldn't find realpath function!])])
+AC_CHECK_FUNC([regexec],[],[AC_MSG_ERROR([Couldn't find regexec function!])])
+#if we got regexec, we should also have regcomp and regfree
 AC_CHECK_FUNC([readlink],[],[AC_MSG_ERROR([Couldn't find readlink function!])])
 
 #set the default install dir to ./inst
