@@ -24,11 +24,13 @@ AC_PROG_LIBTOOL
 
 # Checks for header files.
 AC_HEADER_STDC
+AC_CHECK_HEADERS_ONCE([getopt.h])
 #AC_CHECK_HEADERS([])
 
 # Checks for typedefs, structures, and compiler characteristics.
 
 # Checks for library functions.
+AC_CHECK_FUNCS_ONCE([getopt_long])
 
 #set the default install dir to ./inst
 #AC_PREFIX_DEFAULT([`pwd`/inst])
