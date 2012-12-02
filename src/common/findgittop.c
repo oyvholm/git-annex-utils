@@ -18,6 +18,7 @@
 #ifdef HAVE_UNISTD_H
 # include <unistd.h>
 #endif /* HAVE_UNISTD_H */
+#include <stdlib.h>
 
 /* local headers */
 #include <common/findgittop.h>
@@ -34,19 +35,18 @@
  *  0 - success
  *  1 - path was not inside a git tree
  *  2 - top was too small
- *  3 - path exceeds PATH_MAX
+ *  3 - realpath failes for some reason
  */
 int findgittop(const char *path, char *top, size_t n){
   char curpath[PATH_MAX+1];
   size_t s;
+  int absolutepath=0;
 
-  /* check that the given path does not exceed PATH_MAX */
-  s=strlen(path);
-  if(s>PATH_MAX)
+  /* resolve all the junk in the path and copy to curpath */
+  if(!realpath(path,curpath))
     return 3;
 
-  /* we start with the given path */
-  strncpy(curpath, path, s);
+  s=strlen(curpath);
 
   /* walk the path looking for an element that contains a .git directory */
   while(s>0){
@@ -63,17 +63,6 @@ int findgittop(const char *path, char *top, size_t n){
     /* remove the last element of the path */
     while(s>1 && curpath[s-1]!='/') s--;
     curpath[--s]=0;
-  }
-
-  /* special case: relative path */
-  if(s==0 && path[0]!='/'){
-    struct stat st;
-    /* check for ".git" */
-    if((!stat(".git",&st)) && S_ISDIR(st.st_mode)){
-      curpath[0]='.';
-      curpath[1]=0;
-      s=1;
-    }
   }
 
   if(s==0)
