@@ -22,10 +22,13 @@ int main(int argc, char *argv[]){
 
   while(idx_paths<argc){
     char top[PATH_MAX+1];
-    if(!findgittop(argv[idx_paths],top,PATH_MAX+1))
+    if(!findgittop(argv[idx_paths],top,PATH_MAX+1)){
+      size_t size;
       printf("%s git dir: %s/.git\n",argv[idx_paths],top);
+      dothedu(argv[idx_paths],top,&size);
+    }
     else
-      printf("%s is not inside a git tree!\n",argv[idx_paths]);
+      fprintf(stderr,"%s is not inside a git tree!\n",argv[idx_paths]);
     idx_paths++;
   }
 

@@ -38,6 +38,7 @@ AC_CHECK_DECLS([PATH_MAX], [],
 # Checks for library functions.
 AC_CHECK_FUNCS_ONCE([getopt_long])
 AC_CHECK_FUNC([realpath],[],[AC_MSG_ERROR([Couldn't find realpath function!])])
+AC_CHECK_FUNC([readlink],[],[AC_MSG_ERROR([Couldn't find readlink function!])])
 
 #set the default install dir to ./inst
 #AC_PREFIX_DEFAULT([`pwd`/inst])
