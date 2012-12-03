@@ -22,7 +22,6 @@ int main(int argc, char *argv[]){
   while(idx_paths<argc){
     size_t size;
     dothedu(argv[idx_paths],&size);
-    printf("%d %s\n",size,argv[idx_paths]);
     idx_paths++;
   }
 

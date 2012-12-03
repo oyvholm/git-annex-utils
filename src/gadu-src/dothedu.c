@@ -21,6 +21,9 @@
 #ifdef HAVE_REGEX_H
 # include <regex.h>
 #endif /* HAVE_REGEX_H */
+#ifdef HAVE_DIRENT_H
+# include <dirent.h>
+#endif /* HAVE_DIRENT_H */
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -40,9 +43,8 @@
  * returns:
  *  0 - success
  *  1 - couldn't stat something
- *  2 - 
- *  3 - 
- *  4 - couldn't open a dir in the path
+ *  2 - couldn't open a dir in the path
+ *  3 - path size exceeds PATH_MAX
  */
 int dothedu(const char *path, size_t *size){
   return dothepath(path,size);
@@ -54,8 +56,10 @@ int dothepath(const char *path, size_t *size){
   regmatch_t regmatch;
   char *p;
 
-  if(lstat(path,&st))
+  if(lstat(path,&st)){
+    fprintf(stderr,"%s: warning - couldn't stat %s\n",opt_progname,path);
     return 1; /* couldn't stat a path */
+  }
 
   if(S_ISDIR(st.st_mode))
     return dothedir(path,size);
@@ -108,5 +112,38 @@ int dothepath(const char *path, size_t *size){
 }
 
 int dothedir(const char *path,size_t *size){
+  DIR *d;
+  struct dirent *de;
+  size_t cursize;
+  char tmppath[PATH_MAX+1];
+  size_t pathsize;
+
+  *size=0;
+
+  d=opendir(path);
+  if(!d)
+    return 2;
+
+  pathsize=strlen(path)+1;
+  if(pathsize>PATH_MAX)
+    return 3;
+
+  strcpy(tmppath,path);
+  strcat(tmppath,"/");
+
+  while(de=readdir(d))
+    if( strcmp(de->d_name,".") && strcmp(de->d_name,"..") ){
+      size_t tmpsize;
+      if(strlen(de->d_name)+pathsize > PATH_MAX)
+	return 3;
+      strcat(tmppath,de->d_name);
+      if(!dothepath(tmppath,&tmpsize))
+	cursize+=tmpsize;
+      tmppath[pathsize]=0;
+    }
+
+  printf("%d\t%s\n",cursize,path);
+  *size=cursize;
+
   return 0;
 }

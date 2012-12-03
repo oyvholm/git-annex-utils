@@ -24,7 +24,7 @@ AC_PROG_LIBTOOL
 
 # Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADERS_ONCE([getopt.h limits.h regex.h])
+AC_CHECK_HEADERS_ONCE([dirent.h getopt.h limits.h regex.h])
 #AC_CHECK_HEADERS([])
 
 # Checks for typedefs, structures, and compiler characteristics.
