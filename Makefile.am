@@ -2,4 +2,4 @@ ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = src .
 
-EXTRA_DIST = autogen.sh
+EXTRA_DIST = autogen.sh pgpkeys.asc
