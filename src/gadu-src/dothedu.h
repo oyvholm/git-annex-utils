@@ -21,7 +21,7 @@ int dothedu(const char *path, size_t *size);
 
 /* internal funcs */
 int dothepath(const char *path, size_t *size, int output);
-int dothedir(const char *path, size_t *size);
+int dothedir(const char *path, size_t *size, int output);
 void printpath(size_t size, const char *path);
 
 #endif /* __DOTHEDU_H__ */

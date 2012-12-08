@@ -47,13 +47,17 @@ int procopts(int argc, char *argv[]){
       exit(RTRN_OK);
       break;
 
+    case 'b': /* output bytes */
+      opt_bytes=1;
+      break;
+
     case 'h':
       usage();
       exit(RTRN_OK);
       break;
 
-    case 'b': /* output bytes */
-      opt_bytes=1;
+    case 's':
+      opt_summarize=1;
       break;
 
     default:
@@ -74,3 +78,4 @@ int procopts(int argc, char *argv[]){
 /* global program options, generally set by the command line */
 char *opt_progname; /* holds the program's name */
 char *opt_bytes=0; /* whether to output bytes or blocks */
+char *opt_summarize=0; /* only display output for command line arguments */

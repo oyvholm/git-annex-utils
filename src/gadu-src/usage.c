@@ -14,8 +14,9 @@
 void usage(){
   printf("usage: %s [options] <path> [<path>...]\n",opt_progname);
   printf(
-"  -V, --version   Print version\n"
-"  -h, --help      Display this message\n"
-"  -b, --bytes     Output size in bytes rather than 512 byte blocks\n"
+"  -V, --version    print version\n"
+"  -b, --bytes      output size in bytes rather than 512 byte blocks\n"
+"  -h, --help       display this message\n"
+"  -s, --summarize  display only a total for each argument\n"
 "\n");
 }

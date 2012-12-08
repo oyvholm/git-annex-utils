@@ -63,7 +63,7 @@ int dothepath(const char *path, size_t *size, int output){
   }
 
   if(S_ISDIR(st.st_mode))
-    return dothedir(path,size);
+    return dothedir(path,size,output|(!opt_summarize));
 
   *size=0; /* we're handling it, start with a zero size */
 
@@ -114,7 +114,7 @@ int dothepath(const char *path, size_t *size, int output){
   return 0;
 }
 
-int dothedir(const char *path,size_t *size){
+int dothedir(const char *path,size_t *size, int output){
   DIR *d;
   struct dirent *de;
   size_t cursize;
@@ -154,7 +154,8 @@ int dothedir(const char *path,size_t *size){
 
   closedir(d); /* close the directory */
 
-  printpath(cursize,path); /* output the result */
+  if(output)
+    printpath(cursize,path); /* output the result */
   *size=cursize; /* return the result */
 
   return 0;
