@@ -18,7 +18,7 @@ int procopts(int argc, char *argv[]);
 
 /* program wide options, generally set by the command line */
 extern char *opt_progname; /* holds the executable's name */
-extern char *opt_bytes; /* whether to output bytes or blocks */
-extern char *opt_summarize; /* only display output for command line arguments */
+extern char opt_bytes; /* whether to output bytes or blocks */
+extern char opt_summarize; /* only display output for command line arguments */
 
 #endif /* __OPTS_H__ */

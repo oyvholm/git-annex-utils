@@ -77,5 +77,5 @@ int procopts(int argc, char *argv[]){
 
 /* global program options, generally set by the command line */
 char *opt_progname; /* holds the program's name */
-char *opt_bytes=0; /* whether to output bytes or blocks */
-char *opt_summarize=0; /* only display output for command line arguments */
+char opt_bytes=0; /* whether to output bytes or blocks */
+char opt_summarize=0; /* only display output for command line arguments */

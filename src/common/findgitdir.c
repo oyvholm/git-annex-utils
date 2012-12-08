@@ -17,6 +17,9 @@
 # include <sys/stat.h>
 #endif /* HAVE_SYS_STAT_H */
 
+/* local headers */
+#include <common/findgitdir.h>
+
 /* find the depth of the .git dir from the given path
  *
  * path - path to look in
