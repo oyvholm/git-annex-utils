@@ -116,7 +116,7 @@ int dothepath(const char *path, size_t *size, int cmdline, unsigned int depth){
       if(rslt || regmatch.rm_so<0)
 	break; /* regex didn't match, not an annexed link?  Not an error? */
 
-      *size=strtoll(p+regmatch.rm_so+2,p+regmatch.rm_eo-1,10);
+      *size=strtoll(p+regmatch.rm_so+2,NULL,10);
     }
   }while(0);
 
@@ -128,7 +128,7 @@ int dothepath(const char *path, size_t *size, int cmdline, unsigned int depth){
 int dothedir(const char *path,size_t *size, int output, unsigned int depth){
   DIR *d;
   struct dirent *de;
-  size_t cursize;
+  size_t cursize=0;
   char tmppath[PATH_MAX+1];
   size_t pathsize;
 
