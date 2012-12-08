@@ -30,6 +30,7 @@
 /* local headers */
 #include <opts.h>
 #include <common/returncodes.h>
+#include <dothedu.h>
 
 /* Walk through the directories and tally up all annexed file sizes
  *
@@ -47,10 +48,10 @@
  *  3 - path size exceeds PATH_MAX
  */
 int dothedu(const char *path, size_t *size){
-  return dothepath(path,size);
+  return dothepath(path,size,1);
 }
 
-int dothepath(const char *path, size_t *size){
+int dothepath(const char *path, size_t *size, int output){
   struct stat st;
   regex_t regex;
   regmatch_t regmatch;
@@ -108,6 +109,8 @@ int dothepath(const char *path, size_t *size){
     *size=strtoll(p+regmatch.rm_so+2,p+regmatch.rm_eo-1,10);
   }
 
+  if(output) printpath(*size,path);
+
   return 0;
 }
 
@@ -137,15 +140,19 @@ int dothedir(const char *path,size_t *size){
       if(strlen(de->d_name)+pathsize > PATH_MAX)
 	return 3;
       strcat(tmppath,de->d_name);
-      if(!dothepath(tmppath,&tmpsize))
+      if(!dothepath(tmppath,&tmpsize,0))
 	cursize+=tmpsize;
       tmppath[pathsize]=0;
     }
 
   closedir(d);
 
-  printf("%zu\t%s\n",cursize,path);
+  printpath(cursize,path);
   *size=cursize;
 
   return 0;
+}
+
+void printpath(size_t size, const char *path){
+  printf("%zu\t%s\n",size,path);
 }
