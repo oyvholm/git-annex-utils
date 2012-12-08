@@ -43,7 +43,7 @@ int main(int argc, char *argv[]){
       break;
     case 0:
       depth=findgitdir(path);
-      dothedu(argv[idx_paths],&size);
+      dothedu(argv[idx_paths],&size,depth);
       break;
     default:
       fprintf(stderr,"%s: unknown error while normalizing '%s'\n",opt_progname,argv[idx_paths]);

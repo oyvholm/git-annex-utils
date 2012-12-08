@@ -47,11 +47,22 @@
  *  2 - couldn't open a dir in the path
  *  3 - path size exceeds PATH_MAX
  */
-int dothedu(const char *path, size_t *size){
-  return dothepath(path,size,1);
+int dothedu(const char *path, size_t *size, unsigned int depth){
+  return dothepath(path,size,1,depth);
 }
 
-int dothepath(const char *path, size_t *size, int output){
+/* handle a path
+ *
+ * path - the path to handle
+ * size - place to report back the file/dir size
+ * cmdline - this path came from the command line
+ * depth - the depth of the .git dir from the path
+ *
+ * returns:
+ * 0 - success
+ * 1 - couldn't stat something
+ */
+int dothepath(const char *path, size_t *size, int cmdline, unsigned int depth){
   struct stat st;
   regex_t regex;
   regmatch_t regmatch;
@@ -63,58 +74,58 @@ int dothepath(const char *path, size_t *size, int output){
   }
 
   if(S_ISDIR(st.st_mode))
-    return dothedir(path,size,output|(!opt_summarize));
+    return dothedir(path,size,cmdline|(!opt_summarize),depth+(cmdline?0:1));
 
   *size=0; /* we're handling it, start with a zero size */
 
-  if(S_ISLNK(st.st_mode)){
-    char linkbuf[PATH_MAX+1];
-    ssize_t rslt;
+  do{
+    if(S_ISLNK(st.st_mode)){
+      char linkbuf[PATH_MAX+1];
+      ssize_t rslt;
+      unsigned int i;
 
-    /* read the link */
-    rslt=readlink(path,linkbuf,PATH_MAX);
-    if(rslt>=0)
-      linkbuf[rslt]=0;
-    else
-      linkbuf[0]=0; /* zero len string on err */
+      /* read the link */
+      rslt=readlink(path,linkbuf,PATH_MAX);
+      if(rslt>=0)
+	linkbuf[rslt]=0;
+      else
+	linkbuf[0]=0; /* zero len string on err */
 
-    if(regcomp(&regex,"^([.][.]/)*.git/annex/objects/",REG_EXTENDED)){
-      fprintf(stderr,"%s: An error occured compiling the regex, this shouldn't be possible!\n",opt_progname);
-      exit(RTRN_ERR_INTERNAL);
+      /* look for the annexed link structure
+       * must be "../" * depth followed by ".git/annex/objects/" */
+      for(i=0;i<depth;i++){
+	if(strncmp("../",linkbuf+(3*i),3))
+	  break; /* not an annexed link */
+      }
+      if(strncmp(".git/annex/objects/",linkbuf+(3*depth),sizeof(".git/annex/objects/")-1))
+	break; /* not an annexed link */
+
+      /* find the last '/' character */
+      p=linkbuf+strlen(linkbuf);
+      while( (p>linkbuf) && (*p)!='/' ) p--;
+
+      if(regcomp(&regex,"[-]s([0-9]+)[-]",REG_EXTENDED)){
+	fprintf(stderr,"%s: An error occured compiling the regex, this shouldn't be possible!\n",opt_progname);
+	exit(RTRN_ERR_INTERNAL);
+      }
+
+      rslt=regexec(&regex,p,1,&regmatch,0);
+
+      regfree(&regex);
+
+      if(rslt || regmatch.rm_so<0)
+	break; /* regex didn't match, not an annexed link?  Not an error? */
+
+      *size=strtoll(p+regmatch.rm_so+2,p+regmatch.rm_eo-1,10);
     }
+  }while(0);
 
-    rslt=regexec(&regex,linkbuf,1,&regmatch,0);
-
-    regfree(&regex);
-
-    if(rslt)
-      return 0; /* regex didn't match, not an annexed link.  Not an error */
-    
-    /* find the last '/' character */
-    p=linkbuf+strlen(linkbuf);
-    while( (p>linkbuf) && (*p)!='/' ) p--;
-
-    if(regcomp(&regex,"[-]s([0-9]+)[-]",REG_EXTENDED)){
-      fprintf(stderr,"%s: An error occured compiling the regex, this shouldn't be possible!\n",opt_progname);
-      exit(RTRN_ERR_INTERNAL);
-    }
-
-    rslt=regexec(&regex,p,1,&regmatch,0);
-
-    regfree(&regex);
-
-    if(rslt || regmatch.rm_so<0)
-      return 0; /* regex didn't match, not an annexed link?  Not an error? */
-
-    *size=strtoll(p+regmatch.rm_so+2,p+regmatch.rm_eo-1,10);
-  }
-
-  if(output) printpath(*size,path);
+  if(cmdline) printpath(*size,path); /* output if this was a cmdline arg */
 
   return 0;
 }
 
-int dothedir(const char *path,size_t *size, int output){
+int dothedir(const char *path,size_t *size, int output, unsigned int depth){
   DIR *d;
   struct dirent *de;
   size_t cursize;
@@ -147,7 +158,7 @@ int dothedir(const char *path,size_t *size, int output){
       if(strlen(de->d_name)+pathsize > PATH_MAX)
 	return 3;
       strcat(tmppath,de->d_name); /* add the entry to the path */
-      if(!dothepath(tmppath,&tmpsize,0)) /* handle the new path */
+      if(!dothepath(tmppath,&tmpsize,0,depth)) /* handle the new path */
 	cursize+=tmpsize; /* add to tally if successful */
       tmppath[pathsize]=0; /* remove the entry from the path */
     }

@@ -17,11 +17,11 @@
  *  3 - realpath failed for some reason
  *  4 - couldn't open a dir in the path
  */
-int dothedu(const char *path, size_t *size);
+int dothedu(const char *path, size_t *size, unsigned int depth);
 
 /* internal funcs */
-int dothepath(const char *path, size_t *size, int output);
-int dothedir(const char *path, size_t *size, int output);
+int dothepath(const char *path, size_t *size, int output, unsigned int depth);
+int dothedir(const char *path, size_t *size, int output, unsigned int depth);
 void printpath(size_t size, const char *path);
 
 #endif /* __DOTHEDU_H__ */
