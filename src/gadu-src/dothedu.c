@@ -154,5 +154,8 @@ int dothedir(const char *path,size_t *size){
 }
 
 void printpath(size_t size, const char *path){
-  printf("%zu\t%s\n",size,path);
+  if(opt_bytes)
+    printf("%zu\t%s\n",size,path);
+  else
+    printf("%zu\t%s\n",size/512+(size%512?1:0),path);
 }

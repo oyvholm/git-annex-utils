@@ -52,6 +52,10 @@ int procopts(int argc, char *argv[]){
       exit(RTRN_OK);
       break;
 
+    case 'b': /* output bytes */
+      opt_bytes=1;
+      break;
+
     default:
       fprintf(stderr,"%s: Unknown option %c, use -h for help.\n", opt_progname, c);
     case '?':
@@ -69,3 +73,4 @@ int procopts(int argc, char *argv[]){
 
 /* global program options, generally set by the command line */
 char *opt_progname; /* holds the program's name */
+char *opt_bytes=0; /* whether to output bytes or blocks */
