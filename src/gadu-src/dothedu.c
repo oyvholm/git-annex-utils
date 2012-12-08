@@ -142,6 +142,8 @@ int dothedir(const char *path,size_t *size){
       tmppath[pathsize]=0;
     }
 
+  closedir(d);
+
   printf("%zu\t%s\n",cursize,path);
   *size=cursize;
 
