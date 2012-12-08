@@ -123,38 +123,45 @@ int dothedir(const char *path,size_t *size){
 
   *size=0;
 
+  /* try to open the dir */
   d=opendir(path);
   if(!d)
     return 2;
 
-  pathsize=strlen(path)+1;
+  /* calculate the pathsize and return an error if > PATH_MAX */
+  pathsize=strlen(path);
+  if(path[pathsize-1]!='/') pathsize+=1;
   if(pathsize>PATH_MAX)
     return 3;
 
+  /* copy the path to tmppath and add a '/' if needed */
   strcpy(tmppath,path);
-  strcat(tmppath,"/");
+  if(path[pathsize-1]!='/') strcat(tmppath,"/");
 
+  /* for each directory entry... */
   while(de=readdir(d))
+    /* if the entry is not "." or ".."... */
     if( strcmp(de->d_name,".") && strcmp(de->d_name,"..") ){
       size_t tmpsize;
+      /* if the resultant path will be larger than PATH_MAX return an error */
       if(strlen(de->d_name)+pathsize > PATH_MAX)
 	return 3;
-      strcat(tmppath,de->d_name);
-      if(!dothepath(tmppath,&tmpsize,0))
-	cursize+=tmpsize;
-      tmppath[pathsize]=0;
+      strcat(tmppath,de->d_name); /* add the entry to the path */
+      if(!dothepath(tmppath,&tmpsize,0)) /* handle the new path */
+	cursize+=tmpsize; /* add to tally if successful */
+      tmppath[pathsize]=0; /* remove the entry from the path */
     }
 
-  closedir(d);
+  closedir(d); /* close the directory */
 
-  printpath(cursize,path);
-  *size=cursize;
+  printpath(cursize,path); /* output the result */
+  *size=cursize; /* return the result */
 
   return 0;
 }
 
 void printpath(size_t size, const char *path){
-  if(opt_bytes)
+  if(opt_bytes) /* if we output bytes rather than 512 byte blocks */
     printf("%zu\t%s\n",size,path);
   else
     printf("%zu\t%s\n",size/512+(size%512?1:0),path);
