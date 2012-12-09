@@ -42,6 +42,15 @@ int procopts(int argc, char *argv[]){
       break;
 
     switch (c) {
+    case 0:
+      if(!strcmp(long_options[option_index].name,"help")){
+	usage();
+	exit(RTRN_OK);
+      }
+      else
+	exit(RTRN_ERR_CMDLINE);
+      break;
+
     case 'V':
       printf("%s: %s\n", opt_progname, PACKAGE_STRING);
       exit(RTRN_OK);
@@ -51,17 +60,12 @@ int procopts(int argc, char *argv[]){
       opt_bytes=1;
       break;
 
-    case 'h':
-      usage();
-      exit(RTRN_OK);
-      break;
-
     case 's':
       opt_summarize=1;
       break;
 
     default:
-      fprintf(stderr,"%s: Unknown option %c, use -h for help.\n", opt_progname, c);
+      fprintf(stderr,"%s: Unknown option %c, use --help for help.\n", opt_progname, c);
     case '?':
       exit(RTRN_ERR_CMDLINE);
       break;
@@ -69,7 +73,7 @@ int procopts(int argc, char *argv[]){
   }
 
   if (optind >= argc) {
-    fprintf(stderr, "%s: You must specify at least one pathname, use -h for help.\n", opt_progname);
+    fprintf(stderr, "%s: You must specify at least one pathname, use --help for help.\n", opt_progname);
     exit(RTRN_ERR_CMDLINE);
   }
   return optind;
