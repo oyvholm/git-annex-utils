@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.63])
-AC_INIT([git-annex-utils], [0.02], [pgp@git-annex.mysteryvortex.com])
+AC_INIT([git-annex-utils], [0.03], [pgp@git-annex.mysteryvortex.com])
 AM_INIT_AUTOMAKE([dist-zip dist-bzip2 subdir-objects])
 AC_CONFIG_SRCDIR([src/gadu-src/gadu.c])
 AC_CONFIG_HEADERS([config.h])
