@@ -47,8 +47,13 @@
  *  2 - couldn't open a dir in the path
  *  3 - path size exceeds PATH_MAX
  */
-int dothedu(const char *path, size_t *size, unsigned int depth){
-  return dothepath(path,size,1,depth);
+int dothedu(const char *path, unsigned int depth){
+  int retval;
+  mpz_t size;
+  mpz_init(size);
+  retval=dothepath(path,size,1,depth);
+  mpz_clear(size);
+  return retval;
 }
 
 /* handle a path
@@ -62,7 +67,7 @@ int dothedu(const char *path, size_t *size, unsigned int depth){
  * 0 - success
  * 1 - couldn't stat something
  */
-int dothepath(const char *path, size_t *size, int cmdline, unsigned int depth){
+int dothepath(const char *path, mpz_t size, int cmdline, unsigned int depth){
   struct stat st;
   regex_t regex;
   regmatch_t regmatch;
@@ -76,7 +81,7 @@ int dothepath(const char *path, size_t *size, int cmdline, unsigned int depth){
   if(S_ISDIR(st.st_mode))
     return dothedir(path,size,cmdline|(!opt_summarize),depth+(cmdline?0:1));
 
-  *size=0; /* we're handling it, start with a zero size */
+  mpz_set_ui(size,0); /* we're handling it, start with a zero size */
 
   do{
     if(S_ISLNK(st.st_mode)){
@@ -116,23 +121,23 @@ int dothepath(const char *path, size_t *size, int cmdline, unsigned int depth){
       if(rslt || regmatch.rm_so<0)
 	break; /* regex didn't match, not an annexed link?  Not an error? */
 
-      *size=strtoll(p+regmatch.rm_so+2,NULL,10);
+      p[regmatch.rm_so+2+strspn(p+regmatch.rm_so+2,"0123456789")]=0;
+      mpz_set_str(size,p+regmatch.rm_so+2,10);
     }
   }while(0);
 
-  if(cmdline) printpath(*size,path); /* output if this was a cmdline arg */
+  if(cmdline) printpath(size,path); /* output if this was a cmdline arg */
 
   return 0;
 }
 
-int dothedir(const char *path,size_t *size, int output, unsigned int depth){
+int dothedir(const char *path,mpz_t size, int output, unsigned int depth){
   DIR *d;
   struct dirent *de;
-  size_t cursize=0;
+  mpz_t cursize;
+  mpz_t tmpsize;
   char tmppath[PATH_MAX+1];
   size_t pathsize;
-
-  *size=0;
 
   /* try to open the dir */
   d=opendir(path);
@@ -149,17 +154,23 @@ int dothedir(const char *path,size_t *size, int output, unsigned int depth){
   strcpy(tmppath,path);
   if(path[pathsize-1]!='/') strcat(tmppath,"/");
 
+  /* start with cursize of 0 */
+  mpz_init_set_ui(cursize,0);
+  mpz_init(tmpsize);
+
   /* for each directory entry... */
   while(de=readdir(d))
     /* if the entry is not "." or ".."... */
     if( strcmp(de->d_name,".") && strcmp(de->d_name,"..") ){
-      size_t tmpsize;
       /* if the resultant path will be larger than PATH_MAX return an error */
-      if(strlen(de->d_name)+pathsize > PATH_MAX)
+      if(strlen(de->d_name)+pathsize > PATH_MAX){
+	mpz_clear(cursize); /* free cursize */
+	mpz_clear(tmpsize); /* free tmpsize */
 	return 3;
+      }
       strcat(tmppath,de->d_name); /* add the entry to the path */
-      if(!dothepath(tmppath,&tmpsize,0,depth)) /* handle the new path */
-	cursize+=tmpsize; /* add to tally if successful */
+      if(!dothepath(tmppath,tmpsize,0,depth)) /* handle the new path */
+	mpz_add(cursize,cursize,tmpsize); /* add to tally if successful */
       tmppath[pathsize]=0; /* remove the entry from the path */
     }
 
@@ -167,14 +178,18 @@ int dothedir(const char *path,size_t *size, int output, unsigned int depth){
 
   if(output)
     printpath(cursize,path); /* output the result */
-  *size=cursize; /* return the result */
+
+  mpz_swap(size,cursize); /* return the result */
+  mpz_clear(cursize); /* free cursize */
+  mpz_clear(tmpsize); /* free tmpsize */
 
   return 0;
 }
 
-void printpath(size_t size, const char *path){
-  if(opt_bytes) /* if we output bytes rather than 512 byte blocks */
-    printf("%zu\t%s\n",size,path);
-  else
-    printf("%zu\t%s\n",size/512+(size%512?1:0),path);
+void printpath(mpz_t size, const char *path){
+  mpz_t out;
+  mpz_init(out);
+  mpz_cdiv_q(out,size,opt_blocksize); /* out=size/blocksize (rounded up) */
+  mpz_out_str(stdout,10,out);
+  printf("\t%s\n",path);
 }

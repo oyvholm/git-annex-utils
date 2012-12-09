@@ -40,6 +40,9 @@ AC_CHECK_FUNCS_ONCE([getopt_long])
 AC_CHECK_FUNC([regexec],[],[AC_MSG_ERROR([Couldn't find regexec function!])])
 #if we got regexec, we should also have regcomp and regfree
 AC_CHECK_FUNC([readlink],[],[AC_MSG_ERROR([Couldn't find readlink function!])])
+#TODO: someday we could make gmp optional
+AC_CHECK_LIB(gmp,__gmpz_init,,[AC_MSG_ERROR([GNU MP not found, see http://gmplib.org/])])
+AC_CHECK_HEADERS([gmp.h],[],[AC_MSG_ERROR([[Couldn't find gmp header!]])])
 
 #set the default install dir to ./inst
 #AC_PREFIX_DEFAULT([`pwd`/inst])

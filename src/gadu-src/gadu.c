@@ -11,6 +11,7 @@
 #endif /* HAVE_LIMITS_H */
 
 /* local headers */
+#include <init.h>
 #include <opts.h>
 #include <common/returncodes.h>
 #include <common/normalizepath.h>
@@ -20,10 +21,12 @@ int main(int argc, char *argv[]){
   int idx_paths; /* index to the first path in argv[] */
   int retval=RTRN_OK;
 
+  /* setup vars, etc... */
+  init(argc, argv);
+  /* process command line */
   idx_paths=procopts(argc, argv);
 
   while(idx_paths<argc){
-    size_t size;
     char path[PATH_MAX+1]={};
     int depth;
 
@@ -43,7 +46,7 @@ int main(int argc, char *argv[]){
       break;
     case 0:
       depth=findgitdir(path);
-      dothedu(argv[idx_paths],&size,depth);
+      dothedu(argv[idx_paths],depth);
       break;
     default:
       fprintf(stderr,"%s: unknown error while normalizing '%s'\n",opt_progname,argv[idx_paths]);
