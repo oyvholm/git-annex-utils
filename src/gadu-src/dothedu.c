@@ -24,6 +24,9 @@
 #ifdef HAVE_DIRENT_H
 # include <dirent.h>
 #endif /* HAVE_DIRENT_H */
+#ifdef HAVE_GMP_H
+#include <gmp.h>
+#endif /* HAVE_GMP_H */
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -31,6 +34,7 @@
 #include <opts.h>
 #include <common/returncodes.h>
 #include <dothedu.h>
+#include <output.h>
 
 /* Walk through the directories and tally up all annexed file sizes
  *
@@ -184,12 +188,4 @@ int dothedir(const char *path,mpz_t size, int output, unsigned int depth){
   mpz_clear(tmpsize); /* free tmpsize */
 
   return 0;
-}
-
-void printpath(mpz_t size, const char *path){
-  mpz_t out;
-  mpz_init(out);
-  mpz_cdiv_q(out,size,opt_blocksize); /* out=size/blocksize (rounded up) */
-  mpz_out_str(stdout,10,out);
-  printf("\t%s\n",path);
 }

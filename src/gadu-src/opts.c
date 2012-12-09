@@ -70,6 +70,10 @@ int procopts(int argc, char *argv[]){
       mpz_set_ui(opt_blocksize,1);
       break;
 
+    case 'h': /* output bytes */
+      opt_humanreadable=1;
+      break;
+
     case 's':
       opt_summarize=1;
       break;
@@ -186,4 +190,5 @@ void setblocksize(const char *arg){
 /* global program options, generally set by the command line */
 char *opt_progname; /* holds the program's name */
 mpz_t opt_blocksize; /* what blocksize to use for counting */
+char opt_humanreadable=0; /* display output in a "human readable" format */
 char opt_summarize=0; /* only display output for command line arguments */

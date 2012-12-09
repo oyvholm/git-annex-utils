@@ -1,3 +1,9 @@
+/* Copyright 2012 Steve Seltzer, see COPYING for license */
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif /* HAVE_CONFIG_H */
+
 #ifndef __DOTHEDU_H__
 #define __DOTHEDU_H__
 

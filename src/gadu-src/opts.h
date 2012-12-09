@@ -15,20 +15,22 @@
 int procopts(int argc, char *argv[]);
 
 /* command line options */
-#define SHORT_OPTS "VbsB:"
+#define SHORT_OPTS "VB:bhs"
 #define LONG_OPTS { \
-{"version",    no_argument,       0, 'V'}, \
-{"bytes",      no_argument,       0, 'b'}, \
-{"block-size", required_argument, 0, 'B'}, \
-{"help",       no_argument,       0,  0 }, \
-{"summarize",  no_argument,       0, 's'}, \
-{0,            0,                 0,  0 } \
+{"version",        no_argument,       0, 'V'}, \
+{"bytes",          no_argument,       0, 'b'}, \
+{"block-size",     required_argument, 0, 'B'}, \
+{"help",           no_argument,       0,  0 }, \
+{"human-readable", no_argument,       0, 'h'}, \
+{"summarize",      no_argument,       0, 's'}, \
+{0,                0,                 0,  0 } \
 }
 
 /* program wide options, generally set by the command line */
 extern char *opt_progname; /* holds the executable's name */
 extern mpz_t opt_blocksize; /* what blocksize to use for counting */
 extern char opt_summarize; /* only display output for command line arguments */
+extern char opt_humanreadable; /* display output in a "human readable" format */
 
 /* internal funcs */
 void setblocksize(const char *arg); /* set the blocksize */
