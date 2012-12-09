@@ -20,11 +20,19 @@
 int main(int argc, char *argv[]){
   int idx_paths; /* index to the first path in argv[] */
   int retval=RTRN_OK;
+  char *defaultpath=".";
 
   /* setup vars, etc... */
   init(argc, argv);
   /* process command line */
   idx_paths=procopts(argc, argv);
+
+  /* if there was no path arg, fake the default path as the arg */
+  if(idx_paths>=argc){
+    argv=&defaultpath;
+    argc=1;
+    idx_paths=0;
+  }
 
   while(idx_paths<argc){
     char path[PATH_MAX+1]={};

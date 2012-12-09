@@ -86,10 +86,6 @@ int procopts(int argc, char *argv[]){
     }
   }
 
-  if (optind >= argc) {
-    fprintf(stderr, "%s: You must specify at least one pathname, use --help for help.\n", opt_progname);
-    exit(RTRN_ERR_CMDLINE);
-  }
   return optind;
 }
 
