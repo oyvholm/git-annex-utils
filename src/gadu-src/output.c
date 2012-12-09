@@ -31,27 +31,24 @@ void printpath(mpz_t size, const char *path){
 
 #define MULTIPLIERS "KMGTPEZY"
 void prettyprintsize(mpz_t size){
-  mpz_t out;
-  mpz_t multiplier;
+  mpz_t tmp;
   char *multipliers=MULTIPLIERS;
   unsigned char i=0;
 
   /* start out at 1024, we'll divide by this before using the mulitplier */
-  mpz_init_set_ui(multiplier,1024);
-  while(i<strlen(MULTIPLIERS) && mpz_cmp(size,multiplier)>=0){
-    mpz_mul_ui(multiplier,multiplier,1024);
+  mpz_init_set_ui(tmp,1024);
+  while(i<strlen(MULTIPLIERS) && mpz_cmp(size,tmp)>=0){
+    mpz_mul_ui(tmp,tmp,1024);
     i++;
   }
   if(i<=0) /* special case for bytes (no multiplier) */
     mpz_out_str(stdout,10,size);
   else{
-    mpz_fdiv_q_ui(multiplier,multiplier,1024);
+    mpz_fdiv_q_ui(tmp,tmp,1024);
     i--;
-    mpz_init(out);
-    mpz_cdiv_q(out,size,multiplier); /* out=size/multiplier (rounded up) */
-    mpz_out_str(stdout,10,out); /* print the digits */
+    mpz_cdiv_q(tmp,size,tmp); /* out=size/multiplier (rounded up) */
+    mpz_out_str(stdout,10,tmp); /* print the digits */
     putchar(multipliers[i]); /* print the multiplier char */
-    mpz_clear(out);
   }
-  mpz_clear(multiplier);
+  mpz_clear(tmp);
 }
