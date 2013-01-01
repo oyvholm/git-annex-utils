@@ -102,6 +102,12 @@ void setblocksize(const char *arg){
   const char *suffix;
   mpz_t multiplier;
 
+  /* special case empty string */
+  if(!strlen(arg)){
+    fprintf(stderr,"%s: invalid --block-size argument ''\n",opt_progname);
+    exit(RTRN_ERR_CMDLINE);
+  }
+
   /* check the number of digits */
   arglen=strspn(arg,"0123456789");
   if(arglen>MAX_BLOCKSIZE_ARG_DIGITS){
