@@ -74,6 +74,10 @@ int procopts(int argc, char *argv[]){
       opt_humanreadable=1;
       break;
 
+    case 'm': /* output bytes */
+      mpz_set_ui(opt_blocksize,1024*1024);
+      break;
+
     case 's':
       opt_summarize=1;
       break;
