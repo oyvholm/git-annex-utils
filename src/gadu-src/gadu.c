@@ -54,7 +54,21 @@ int main(int argc, char *argv[]){
       break;
     case 0:
       depth=findgitdir(path);
-      dothedu(argv[idx_paths],depth);
+      if(depth>=0)
+	dothedu(argv[idx_paths],depth);
+      else{
+	switch(depth){
+	case -2:
+	  fprintf(stderr,"%s: path too long error while searching for a .git directory under '%s'\n",opt_progname,path);
+	  break;
+	case -1:
+	  fprintf(stderr,"%s: couldn't find a .git directory under '%s'\n",opt_progname,path);
+	  break;
+	default:
+	  fprintf(stderr,"%s: an unknown error occurred while searching for a .git directory under '%s'\n",opt_progname,path);
+	}
+	retval|=RTRN_ERR_PATHTOOLONG;
+      }
       break;
     default:
       fprintf(stderr,"%s: unknown error while normalizing '%s'\n",opt_progname,argv[idx_paths]);
