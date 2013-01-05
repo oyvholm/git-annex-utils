@@ -1,0 +1,5 @@
+This is a set of utilities that are handy to use with git-annex repositories.
+Currently there is only one utility gadu, a du like utility for annexed files.
+
+To find out a bit more about development and the way in which the GNU autotools
+are used, check the file README.developers

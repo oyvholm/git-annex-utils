@@ -1,0 +1,47 @@
+This is a readme for people intending to modify or fork this project.  It
+describes the slightly unconventional use of GNU's autotools, and gives some of
+the rational behind some design decisions.
+
+
+
+* Compiling from a git checkout
+If you want to compile this project from a git checkout, you will first need to
+run autoconf and friends.  There is a nice script called "autogen.sh" which
+should take care of everything for you assuming that you have all the tools
+needed.  Once that is done you can run "./configure" as normal.
+
+
+Here's an example checkout and build:
+
+/tmp $ git clone http://git.mysteryvortex.com/repositories/git-annex-utils.git
+Cloning into 'git-annex-utils'...
+/tmp $ cd git-annex-utils/
+/tmp/git-annex-utils $ ./autogen.sh 
+Preparing the git-annex-utils build system...please wait
+
+Found GNU Autoconf version 2.69
+Found GNU Automake version 1.11.6
+Found GNU Libtool version 2.4
+
+Automatically preparing build ... done
+
+The git-annex-utils build system is now prepared.  To build here, run:
+  ./configure
+  make
+/tmp/git-annex-utils $ ./configure && make && sudo make install
+
+
+
+* Autotools
+In the most common usage of the autotools package (autoconf, automake, etc...)
+if the source tree is organized into subdirectories, a recursive call to make
+is made for each directory.  This is usually accomplished with the SUBDIRS
+variable in the automake files.  However, the directories listed in the SUBDIRS
+variable are guaranteed to be made in order, so this limits the effectiveness
+of parallel make.
+
+This package instead uses a toplevel makefile in the src/ directory, which
+contains all the instructions needed to compile the code in subdirectories.
+The goal of this structure is to allow for parallel make to work its magic so
+that when future generations compile this project on a 20 core machine with
+"make -j20" it will actually run 20 copies of the compiler at once.
