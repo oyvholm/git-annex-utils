@@ -8,5 +8,6 @@
 #define RTRN_ERR_PATHTOOLONG 4
 #define RTRN_ERR_BADCWD 8
 #define RTRN_ERR_FILE 16
+#define RTRN_ERR_NOTGITREPO 32
 
 #endif /* __RETURNCODES_H__ */

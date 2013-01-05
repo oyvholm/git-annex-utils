@@ -60,14 +60,16 @@ int main(int argc, char *argv[]){
 	switch(depth){
 	case -2:
 	  fprintf(stderr,"%s: path too long error while searching for a .git directory under '%s'\n",opt_progname,path);
+	  retval|=RTRN_ERR_PATHTOOLONG;
 	  break;
 	case -1:
 	  fprintf(stderr,"%s: couldn't find a .git directory under '%s'\n",opt_progname,path);
+	  retval|=RTRN_ERR_NOTGITREPO;
 	  break;
 	default:
 	  fprintf(stderr,"%s: an unknown error occurred while searching for a .git directory under '%s'\n",opt_progname,path);
+	  retval|=RTRN_ERR_INTERNAL;
 	}
-	retval|=RTRN_ERR_PATHTOOLONG;
       }
       break;
     default:
