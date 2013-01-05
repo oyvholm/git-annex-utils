@@ -26,7 +26,7 @@ void printpath(mpz_t size, const char *path){
     mpz_cdiv_q(out,size,opt_blocksize); /* out=size/blocksize (rounded up) */
     mpz_out_str(stdout,10,out);
   }
-  printf("\t%s\n",path);
+  printf("\t%s%c",path,opt_outputnullsep?'\0':'\n');
 }
 
 #define MULTIPLIERS "KMGTPEZY"

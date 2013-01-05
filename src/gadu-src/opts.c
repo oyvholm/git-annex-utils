@@ -54,6 +54,10 @@ int procopts(int argc, char *argv[]){
 	exit(RTRN_ERR_CMDLINE);
       break;
 
+    case '0': /* use null instead of '\n' at end of lines */
+      opt_outputnullsep=1; /* print totals for all files, not just dirs */
+      break;
+
     case 'B': /* set blocksize */
       if(optarg)
 	setblocksize(optarg);
@@ -212,3 +216,4 @@ char opt_humanreadable=0; /* display output in a "human readable" format */
 char opt_summarize=0; /* only display output for command line arguments */
 char opt_outputall=0; /* print totals for all files, not just dirs */
 char opt_printtotal=0; /* print total for all arguments */
+char opt_outputnullsep=0; /* use a null instead of '\n' at the end of lines */

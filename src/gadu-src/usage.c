@@ -14,6 +14,7 @@
 void usage(){
   printf("usage: %s [options] <path> [<path>...]\n",opt_progname);
   printf(
+"  -0, --null            end lines with a null character rather than a newline character\n"
 "  -B, --block-size      set the block size\n"
 "  -a, --all             print counts for all files, not just directories\n"
 "  -b, --bytes           output size in bytes rather than 1024 byte blocks\n"
