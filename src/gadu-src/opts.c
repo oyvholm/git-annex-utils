@@ -45,7 +45,7 @@ int procopts(int argc, char *argv[]){
       break;
 
     switch (c) {
-    case 0:
+    case 0: /* this is a long only option */
       if(!strcmp(long_options[option_index].name,"help")){
 	usage();
 	exit(RTRN_OK);
@@ -61,12 +61,12 @@ int procopts(int argc, char *argv[]){
 	exit(RTRN_ERR_CMDLINE);
       break;
 
-    case 'V':
+    case 'V': /* print version */
       printf("%s: %s\n", opt_progname, PACKAGE_STRING);
       exit(RTRN_OK);
       break;
 
-    case 'a': /* output bytes */
+    case 'a': /* print totals for all files */
       opt_outputall=1; /* print totals for all files, not just dirs */
       break;
 
@@ -78,19 +78,19 @@ int procopts(int argc, char *argv[]){
       opt_printtotal=1;
       break;
 
-    case 'h': /* output bytes */
+    case 'h': /* output "human readable" sizes */
       opt_humanreadable=1;
       break;
 
-    case 'm': /* output bytes */
+    case 'm': /* set blocksize to 1M */
       mpz_set_ui(opt_blocksize,1024*1024);
       break;
 
-    case 's':
+    case 's': /* only output sizes for command line args */
       opt_summarize=1;
       break;
 
-    default:
+    default: /* this shouldn't happen, only if I screwup the options strings */
       fprintf(stderr,"%s: Unknown option %c, use --help for help.\n", opt_progname, c);
     case '?':
       exit(RTRN_ERR_CMDLINE);
