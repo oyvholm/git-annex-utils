@@ -66,9 +66,24 @@ int main(int argc, char *argv[]){
       depth=findgitdir(path);
       if(depth>=0){
 	int rslt;
-	rslt=dothedu(argv[idx_paths],depth,size);
-	if(opt_printtotal && rslt==0)
-	  mpz_add(total,total,size);
+	switch(rslt=dothedu(argv[idx_paths],depth,size)){
+	case 0:
+	  if(opt_printtotal && rslt==0)
+	    mpz_add(total,total,size);
+	  break;
+	case 1:
+	case 2:
+	  fprintf(stderr,"%s: There was an error accessing a file while calculating the size of '%s'\n",opt_progname,argv[idx_paths]);
+	  retval|=RTRN_ERR_FILE;
+	  break;
+	case 3:
+	  fprintf(stderr,"%s: path too long error while calculating the size of '%s'\n",opt_progname,argv[idx_paths]);
+	  retval|=RTRN_ERR_PATHTOOLONG;
+	  break;
+	default:
+	  fprintf(stderr,"%s: unknown error while calculating the size of '%s'\n",opt_progname,argv[idx_paths]);
+	  retval|=RTRN_ERR_INTERNAL;
+	}
       }
       else{
 	switch(depth){
