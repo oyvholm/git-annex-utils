@@ -15,7 +15,7 @@
 int procopts(int argc, char *argv[]);
 
 /* command line options */
-#define SHORT_OPTS "VB:abchms"
+#define SHORT_OPTS "VB:abchkms"
 #define LONG_OPTS { \
 {"version",        no_argument,       0, 'V'}, \
 {"all",            no_argument,       0, 'a'}, \

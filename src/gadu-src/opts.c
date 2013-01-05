@@ -82,6 +82,10 @@ int procopts(int argc, char *argv[]){
       opt_humanreadable=1;
       break;
 
+    case 'k': /* set blocksize to 1M */
+      mpz_set_ui(opt_blocksize,1024);
+      break;
+
     case 'm': /* set blocksize to 1M */
       mpz_set_ui(opt_blocksize,1024*1024);
       break;
