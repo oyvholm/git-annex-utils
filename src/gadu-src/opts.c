@@ -66,6 +66,10 @@ int procopts(int argc, char *argv[]){
       exit(RTRN_OK);
       break;
 
+    case 'a': /* output bytes */
+      opt_outputall=1; /* print totals for all files, not just dirs */
+      break;
+
     case 'b': /* output bytes */
       mpz_set_ui(opt_blocksize,1);
       break;
@@ -198,3 +202,4 @@ char *opt_progname; /* holds the program's name */
 mpz_t opt_blocksize; /* what blocksize to use for counting */
 char opt_humanreadable=0; /* display output in a "human readable" format */
 char opt_summarize=0; /* only display output for command line arguments */
+char opt_outputall=0; /* print totals for all files, not just dirs */

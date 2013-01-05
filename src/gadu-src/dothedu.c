@@ -130,7 +130,7 @@ int dothepath(const char *path, mpz_t size, int cmdline, unsigned int depth){
     }
   }while(0);
 
-  if(cmdline) printpath(size,path); /* output if this was a cmdline arg */
+  if(cmdline || opt_outputall) printpath(size,path); /* output if this was a cmdline arg */
 
   return 0;
 }
@@ -180,7 +180,7 @@ int dothedir(const char *path,mpz_t size, int output, unsigned int depth){
 
   closedir(d); /* close the directory */
 
-  if(output)
+  if(output || opt_outputall)
     printpath(cursize,path); /* output the result */
 
   mpz_swap(size,cursize); /* return the result */

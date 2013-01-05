@@ -15,9 +15,10 @@
 int procopts(int argc, char *argv[]);
 
 /* command line options */
-#define SHORT_OPTS "VB:bhms"
+#define SHORT_OPTS "VB:abhms"
 #define LONG_OPTS { \
 {"version",        no_argument,       0, 'V'}, \
+{"all",            no_argument,       0, 'a'}, \
 {"bytes",          no_argument,       0, 'b'}, \
 {"block-size",     required_argument, 0, 'B'}, \
 {"help",           no_argument,       0,  0 }, \
@@ -31,6 +32,7 @@ extern char *opt_progname; /* holds the executable's name */
 extern mpz_t opt_blocksize; /* what blocksize to use for counting */
 extern char opt_summarize; /* only display output for command line arguments */
 extern char opt_humanreadable; /* display output in a "human readable" format */
+extern char opt_outputall; /* print totals for all files, not just dirs */
 
 /* internal funcs */
 void setblocksize(const char *arg); /* set the blocksize */
