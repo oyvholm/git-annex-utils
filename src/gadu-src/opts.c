@@ -74,6 +74,10 @@ int procopts(int argc, char *argv[]){
       mpz_set_ui(opt_blocksize,1);
       break;
 
+    case 'c': /* print total of all cmdline args */
+      opt_printtotal=1;
+      break;
+
     case 'h': /* output bytes */
       opt_humanreadable=1;
       break;
@@ -203,3 +207,4 @@ mpz_t opt_blocksize; /* what blocksize to use for counting */
 char opt_humanreadable=0; /* display output in a "human readable" format */
 char opt_summarize=0; /* only display output for command line arguments */
 char opt_outputall=0; /* print totals for all files, not just dirs */
+char opt_printtotal=0; /* print total for all arguments */

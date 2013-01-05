@@ -43,20 +43,17 @@
  * from them.
  *
  * path - the path inside the git tree
- * top - (output) the top of the git tree
- * n - the size of the output var
+ * depth - the depth into the path of the .git dir
+ * size - (output) the calculated size of the path
  * returns:
  *  0 - success
  *  1 - couldn't stat something
  *  2 - couldn't open a dir in the path
  *  3 - path size exceeds PATH_MAX
  */
-int dothedu(const char *path, unsigned int depth){
+int dothedu(const char *path, unsigned int depth, mpz_t size){
   int retval;
-  mpz_t size;
-  mpz_init(size);
   retval=dothepath(path,size,1,depth);
-  mpz_clear(size);
   return retval;
 }
 

@@ -9,6 +9,9 @@
 #ifdef HAVE_LIMITS_H
 #include <limits.h>
 #endif /* HAVE_LIMITS_H */
+#ifdef HAVE_GMP_H
+#include <gmp.h>
+#endif /* HAVE_GMP_H */
 
 /* local headers */
 #include <init.h>
@@ -16,11 +19,14 @@
 #include <common/returncodes.h>
 #include <common/normalizepath.h>
 #include <common/findgitdir.h>
+#include <output.h>
 
 int main(int argc, char *argv[]){
   int idx_paths; /* index to the first path in argv[] */
   int retval=RTRN_OK;
   char *defaultpath=".";
+  mpz_t size; /* used by dothedu, contains the size of the path given after a call */
+  mpz_t total; /* holds the total size for --total */
 
   /* setup vars, etc... */
   init(argc, argv);
@@ -33,6 +39,10 @@ int main(int argc, char *argv[]){
     argc=1;
     idx_paths=0;
   }
+
+  mpz_init(size); /* init the size var, we are going to use it */
+  if(opt_printtotal)
+    mpz_init_set_ui(total,0); /* init the total var, we are going to use it */
 
   while(idx_paths<argc){
     char path[PATH_MAX+1]={};
@@ -54,8 +64,12 @@ int main(int argc, char *argv[]){
       break;
     case 0:
       depth=findgitdir(path);
-      if(depth>=0)
-	dothedu(argv[idx_paths],depth);
+      if(depth>=0){
+	int rslt;
+	rslt=dothedu(argv[idx_paths],depth,size);
+	if(opt_printtotal && rslt==0)
+	  mpz_add(total,total,size);
+      }
       else{
 	switch(depth){
 	case -2:
@@ -78,6 +92,13 @@ int main(int argc, char *argv[]){
     }
     idx_paths++;
   }
+
+  if(opt_printtotal){
+    printpath(total,"total");
+    mpz_clear(total);
+  }
+
+  mpz_clear(size); /* free the size var */
 
   return retval;
 }

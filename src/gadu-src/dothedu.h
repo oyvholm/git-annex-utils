@@ -7,6 +7,10 @@
 #ifndef __DOTHEDU_H__
 #define __DOTHEDU_H__
 
+#ifdef HAVE_GMP_H
+#include <gmp.h>
+#endif /* HAVE_GMP_H */
+
 /* Walk through the directories and tally up all annexed file sizes
  *
  * To accomplish this, we walk through the directories looking for symlinks
@@ -23,7 +27,7 @@
  *  3 - realpath failed for some reason
  *  4 - couldn't open a dir in the path
  */
-int dothedu(const char *path, unsigned int depth);
+int dothedu(const char *path, unsigned int depth, mpz_t size);
 
 /* internal funcs */
 int dothepath(const char *path, mpz_t size, int output, unsigned int depth);
