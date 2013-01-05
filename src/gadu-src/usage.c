@@ -12,7 +12,7 @@
 #include <opts.h>
 
 void usage(){
-  printf("usage: %s [options] <path> [<path>...]\n",opt_progname);
+  printf("usage: %s [options] [<path>...]\n",opt_progname);
   printf(
 "  -0, --null            end lines with a null character rather than a newline character\n"
 "  -B, --block-size      set the block size\n"
