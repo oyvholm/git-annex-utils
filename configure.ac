@@ -47,5 +47,5 @@ AC_CHECK_HEADERS([gmp.h],[],[AC_MSG_ERROR([[Couldn't find gmp header!]])])
 #set the default install dir to ./inst
 #AC_PREFIX_DEFAULT([`pwd`/inst])
 
-AC_CONFIG_FILES([Makefile src/Makefile])
+AC_CONFIG_FILES([Makefile src/Makefile man/gadu.1])
 AC_OUTPUT

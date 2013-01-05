@@ -1,0 +1,25 @@
+.TH man 1 "Jan 5, 2013" "@PACKAGE_VERSION@" "gadu - git-annex disk usage"
+.SH NAME
+gadu \- git-annex disk usage
+.SH SYNOPSIS
+gadu [options] [<path>...]
+.SH DESCRIPTION
+gadu is a program that determines the sizes of annexed files in a git-annex repository in a manner similar to the du program for normal files.
+.SH OPTIONS
+ -0, --null            end lines with a null character rather than a newline character
+ -B, --block-size      set the block size
+ -a, --all             print counts for all files, not just directories
+ -b, --bytes           output size in bytes rather than 1024 byte blocks
+ -c, --total           print the total of all the command line arguments
+ -h, --human-readable  print sizes in human readable format (e.g, 1K 234M 2G)
+ -k                    like --block-size=1K
+ -m                    like --block-size=1M
+ -s, --summarize       display only a total for each argument
+ -V, --version         print version
+ --help                display a brief help message
+.SH SEE ALSO
+git-annex(1)
+.SH BUGS
+No known bugs.
+.SH AUTHOR
+Steve Seltzer
