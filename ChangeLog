@@ -1,0 +1,21 @@
+v0.04
+  * add README and ChangeLog files
+  * gdau: more/better error reporting and handling
+  * gadu: don't process args that are not inside a git repo
+  * gadu: add --all/-a, --total/-c, -k, -m, and -0 options
+  * gadu: make --block-size act more like du
+  * gadu: fixup the help message
+  * gadu: add a basic man page
+v0.03
+  * gadu: remove -h as a synonym for --help
+  * gadu: convert eveything to use gnump (bignum)
+  * gadu: add --human-readable/-h option
+  * gadu: default to "." when no path is specified
+v0.02
+  * gadu: add --sumarize/-s option
+  * gadu: be smart about whether a file is annexed or not (find the .git dir
+          and check that the link points there)
+  * gadu: misc. bugfixes
+v0.01
+  * Initial release, basic functionality, only gadu utility
+  * gadu: --bytes/-b option
