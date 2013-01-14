@@ -69,6 +69,16 @@ int procopts(int argc, char *argv[]){
 	exit(RTRN_ERR_CMDLINE);
       break;
 
+    case 'L': /* count only files that are locally available */
+      opt_countlocal=1;
+      opt_countremote=0;
+      break;
+
+    case 'R': /* count only files that are *not* locally available */
+      opt_countlocal=0;
+      opt_countremote=1;
+      break;
+
     case 'V': /* print version */
       printf("%s: %s\n", opt_progname, PACKAGE_STRING);
       exit(RTRN_OK);
@@ -221,3 +231,5 @@ char opt_summarize=0; /* only display output for command line arguments */
 char opt_outputall=0; /* print totals for all files, not just dirs */
 char opt_printtotal=0; /* print total for all arguments */
 char opt_outputnullsep=0; /* use a null instead of '\n' at the end of lines */
+char opt_countlocal=1; /* count local files */
+char opt_countremote=1; /* count remote files */

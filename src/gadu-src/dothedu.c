@@ -110,6 +110,17 @@ int dothepath(const char *path, mpz_t size, int cmdline, unsigned int depth){
       if(strncmp(".git/annex/objects/",linkbuf+(3*depth),sizeof(".git/annex/objects/")-1))
 	break; /* not an annexed link */
 
+      /* skip over local/remote check if we are counting both */
+      if(!(opt_countlocal&&opt_countremote)){
+	struct stat s;
+	int rslt;
+	rslt=stat(path,&s);
+	if(rslt==0 && opt_countlocal==0)
+	  break; /* it is a local file and we aren't counting those */
+	if(rslt!=0 && opt_countremote==0)
+	  break; /* it is a remote file and we aren't counting those */
+      }
+
       /* find the last '/' character */
       p=linkbuf+strlen(linkbuf);
       while( (p>linkbuf) && (*p)!='/' ) p--;

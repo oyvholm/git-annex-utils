@@ -19,7 +19,7 @@
 int procopts(int argc, char *argv[]);
 
 /* command line options */
-#define SHORT_OPTS "0VB:abchkms"
+#define SHORT_OPTS "0VBLR:abchkms"
 #define LONG_OPTS { \
 {"version",        no_argument,       0, 'V'}, \
 {"all",            no_argument,       0, 'a'}, \
@@ -27,7 +27,9 @@ int procopts(int argc, char *argv[]);
 {"block-size",     required_argument, 0, 'B'}, \
 {"help",           no_argument,       0,  0 }, \
 {"human-readable", no_argument,       0, 'h'}, \
+{"local-only",     no_argument,       0, 'L'}, \
 {"null",           no_argument,       0, '0'}, \
+{"remote-only",    no_argument,       0, 'R'}, \
 {"summarize",      no_argument,       0, 's'}, \
 {"total",          no_argument,       0, 'c'}, \
 {0,                0,                 0,  0 } \
@@ -41,6 +43,8 @@ extern char opt_humanreadable; /* display output in a "human readable" format */
 extern char opt_outputall; /* print totals for all files, not just dirs */
 extern char opt_printtotal; /* print total for all arguments */
 extern char opt_outputnullsep; /* use a null instead of '\n' at the end of lines */
+extern char opt_countlocal; /* count local files */
+extern char opt_countremote; /* count remote files */
 
 /* internal funcs */
 void setblocksize(const char *arg); /* set the blocksize */
