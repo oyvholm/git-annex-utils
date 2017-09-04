@@ -23,7 +23,7 @@
 /* print the given size and path */
 void printpath(mpz_t size, const char *path){
   mpz_t out;
-  if(opt_humanreadable)
+  if(opt_humanreadable || opt_si)
     prettyprintsize(size);
   else{
     mpz_init(out);
@@ -36,21 +36,23 @@ void printpath(mpz_t size, const char *path){
 #define MULTIPLIERS "KMGTPEZY"
 void prettyprintsize(mpz_t size){
   mpz_t tmp;
-  char *multipliers=MULTIPLIERS;
+  char *multipliers=strdup(MULTIPLIERS);
   unsigned char i=0;
 
+  /* SI uses lower case k for kilo */
+  multipliers[0]=opt_si?'k':'K';
   /* start out at 1024, we'll divide by this before using the mulitplier */
-  mpz_init_set_ui(tmp,1024);
+  mpz_init_set_ui(tmp,opt_si?1000:1024);
   /* while the multiplier is smaller than the value */
   while(i<strlen(MULTIPLIERS) && mpz_cmp(size,tmp)>=0){
-    mpz_mul_ui(tmp,tmp,1024); /* try the next multiplier */
+    mpz_mul_ui(tmp,tmp,opt_si?1000:1024); /* try the next multiplier */
     i++;
   }
   if(i<=0) /* special case for bytes (no multiplier) */
     mpz_out_str(stdout,10,size);
   else{
     /* go back to the largest multiplier smaller than the value */
-    mpz_fdiv_q_ui(tmp,tmp,1024);
+    mpz_fdiv_q_ui(tmp,tmp,opt_si?1000:1024);
     i--;
     mpz_mul_ui(size,size,10); /* multiply by 10 for 1 decimal place */
     mpz_cdiv_q(tmp,size,tmp); /* tmp=size/multiplier (rounded up) */
@@ -69,4 +71,5 @@ void prettyprintsize(mpz_t size){
     }
   }
   mpz_clear(tmp);
+  free(multipliers);
 }

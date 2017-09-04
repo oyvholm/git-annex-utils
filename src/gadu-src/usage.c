@@ -29,6 +29,7 @@ void usage(){
 "  -k                    like --block-size=1K\n"
 "  -m                    like --block-size=1M\n"
 "  -s, --summarize       display only a total for each argument\n"
+"  --si                  human-readable format, but use powers of 1000\n"
 "  -V, --version         print version\n"
 "  --help                display this message\n"
 "\n");

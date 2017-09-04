@@ -30,6 +30,7 @@ int procopts(int argc, char *argv[]);
 {"local-only",     no_argument,       0, 'L'}, \
 {"null",           no_argument,       0, '0'}, \
 {"remote-only",    no_argument,       0, 'R'}, \
+{"si",             no_argument,       0,  0 }, \
 {"summarize",      no_argument,       0, 's'}, \
 {"total",          no_argument,       0, 'c'}, \
 {0,                0,                 0,  0 } \
@@ -45,6 +46,7 @@ extern char opt_printtotal; /* print total for all arguments */
 extern char opt_outputnullsep; /* use a null instead of '\n' at the end of lines */
 extern char opt_countlocal; /* count local files */
 extern char opt_countremote; /* count remote files */
+extern char opt_si; /* human-readable, use powers of 1000 instead of 1024 */
 
 /* internal funcs */
 void setblocksize(const char *arg); /* set the blocksize */

@@ -53,6 +53,8 @@ int procopts(int argc, char *argv[]){
       if(!strcmp(long_options[option_index].name,"help")){
 	usage();
 	exit(RTRN_OK);
+      } else if(!strcmp(long_options[option_index].name,"si")){
+	opt_si=1;
       }
       else
 	exit(RTRN_ERR_CMDLINE);
@@ -233,3 +235,4 @@ char opt_printtotal=0; /* print total for all arguments */
 char opt_outputnullsep=0; /* use a null instead of '\n' at the end of lines */
 char opt_countlocal=1; /* count local files */
 char opt_countremote=1; /* count remote files */
+char opt_si=0; /* human-readable, use powers of 1000 instead of 1024 */

@@ -17,6 +17,7 @@ gadu is a program that determines the sizes of annexed files in a git-annex repo
  -k                    like --block-size=1K
  -m                    like --block-size=1M
  -s, --summarize       display only a total for each argument
+ --si                  human-readable format, but use powers of 1000
  -V, --version         print version
  --help                display a brief help message
 .SH SEE ALSO
