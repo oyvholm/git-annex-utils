@@ -23,6 +23,7 @@
 #include <common/returncodes.h>
 #include <common/normalizepath.h>
 #include <common/findgitdir.h>
+#include <dothedu.h>
 #include <output.h>
 
 int main(int argc, char *argv[]){
