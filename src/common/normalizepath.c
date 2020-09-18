@@ -114,7 +114,7 @@ int normalizepath(const char *path, char *npath, size_t npath_size){
 	  if(start-npath+1+strlen(end)+1+strlen(linkbuf)+1 > npath_size)
 	    return 1; /* npath was too small */
 	  memmove(start+strlen(linkbuf)+1,end,strlen(end));
-	  strncpy(start+1,linkbuf,strlen(linkbuf));
+	  memcpy(start+1,linkbuf,strlen(linkbuf));
 	  end=start;
 	}
 	else{ /* it is not a good link to a directory */
